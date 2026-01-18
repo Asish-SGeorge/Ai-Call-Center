@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Call Center</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --primary: #6a5cff;
+  --secondary: #9f7aea;
+  --bg: #0f1224;
+  --glass: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.15);
+  --success: #22c55e;
+  --danger: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at top, #1b1f4b, #0f1224);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+/* ===== APP CONTAINER ===== */
+.app {
+  width: 95%;
+  max-width: 1300px;
+  height: 90vh;
+  display: flex;
+  gap: 20px;
+  perspective: 1200px;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 300px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  backdrop-filter: blur(18px);
+  padding: 24px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  transform: rotateY(6deg);
+}
+
+.logo {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.logo-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg,var(--primary),var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 30px;
+}
+
+.stat {
+  background: rgba(255,255,255,0.06);
+  padding: 14px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.stat span {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.stat small {
+  display: block;
+  opacity: 0.7;
+  font-size: 11px;
+}
+
+/* ===== MAIN CHAT ===== */
+.chat {
+  flex: 1;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  backdrop-filter: blur(18px);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.45);
+}
+
+/* HEADER */
+.chat-header {
+  padding: 22px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg,var(--primary),var(--secondary));
+  border-radius: 24px 24px 0 0;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%,100% {opacity:1;}
+  50% {opacity:0.4;}
+}
+
+/* MESSAGES */
+.messages {
+  flex: 1;
+  padding: 26px;
+  overflow-y: auto;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 18px;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.bubble {
+  max-width: 70%;
+  padding: 16px 18px;
+  border-radius: 18px;
+  animation: slide 0.3s ease;
+}
+
+@keyframes slide {
+  from {opacity:0; transform: translateY(10px);}
+  to {opacity:1; transform: translateY(0);}
+}
+
+.user .bubble {
+  background: linear-gradient(135deg,var(--primary),var(--secondary));
+  border-bottom-right-radius: 6px;
+}
+
+.ai .bubble {
+  background: rgba(255,255,255,0.1);
+  border-bottom-left-radius: 6px;
+}
+
+.badge {
+  margin-top: 8px;
+  font-size: 11px;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.resolved {
+  background: rgba(34,197,94,0.2);
+  color: var(--success);
+}
+
+.escalated {
+  background: rgba(239,68,68,0.2);
+  color: var(--danger);
+}
+
+/* INPUT */
+.input {
+  padding: 22px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 14px;
+}
+
+textarea {
+  flex: 1;
+  resize: none;
+  border-radius: 14px;
+  border: none;
+  padding: 14px 16px;
+  font-size: 14px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  outline: none;
+}
+
+button {
+  border: none;
+  padding: 0 22px;
+  border-radius: 14px;
+  cursor: pointer;
+  background: linear-gradient(135deg,var(--primary),var(--secondary));
+  color: white;
+  font-weight: 600;
+}
+
+/* FEATURE BUTTONS */
+.features {
+  display: flex;
+  gap: 10px;
+  padding: 0 22px 18px;
+}
+
+.features button {
+  flex: 1;
+  background: rgba(255,255,255,0.08);
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">🤖</div>
+      <div>
+        <b>AI Call Center</b><br>
+        <small>Gemini Backend</small>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span id="total">0</span>
+        <small>Total</small>
+      </div>
+      <div class="stat">
+        <span id="resolved">0</span>
+        <small>Resolved</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT -->
+  <div class="chat">
+    <div class="chat-header">
+      <h3>Customer Support</h3>
+      <div class="status">
+        <div class="dot"></div> AI Online
+      </div>
+    </div>
+
+    <div class="messages" id="messages"></div>
+
+    <div class="features">
+      <button onclick="playVoice()">🔊 Voice</button>
+      <button onclick="copyLast()">📋 Copy</button>
+    </div>
+
+    <div class="input">
+      <textarea id="input" rows="1" placeholder="Type your message..."></textarea>
+      <button onclick="send()">Send</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let lastAI = "";
+let total = 0;
+let resolved = 0;
+
+function addMessage(role, text, analysis=null) {
+  const div = document.createElement("div");
+  div.className = `message ${role}`;
+  div.innerHTML = `
+    <div class="bubble">
+      ${text}
+      ${analysis ? `<div class="badge ${analysis.status}">${analysis.status.toUpperCase()} • ${analysis.confidence}%</div>` : ""}
+    </div>`;
+  document.getElementById("messages").appendChild(div);
+  document.getElementById("messages").scrollTop = 999999;
+}
+
+async function send() {
+  const input = document.getElementById("input");
+  const msg = input.value.trim();
+  if(!msg) return;
+  input.value = "";
+
+  addMessage("user", msg);
+  total++;
+  document.getElementById("total").innerText = total;
+
+  const res = await fetch("http://localhost:8000/chat", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({message: msg})
+  });
+
+  const data = await res.json();
+  addMessage("ai", data.reply, data.analysis);
+  lastAI = data.reply;
+
+  if(data.analysis.status === "resolved"){
+    resolved++;
+    document.getElementById("resolved").innerText = resolved;
+  }
+}
+
+function playVoice() {
+  if(!lastAI) return alert("No response yet");
+  speechSynthesis.speak(new SpeechSynthesisUtterance(lastAI));
+}
+
+function copyLast() {
+  if(!lastAI) return alert("Nothing to copy");
+  navigator.clipboard.writeText(lastAI);
+  alert("Copied!");
+}
+</script>
+</body>
+</html>
